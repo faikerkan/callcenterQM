@@ -8,6 +8,7 @@ Bu proje, çağrı merkezi müşteri temsilcilerinin performansını değerlendi
 - Performans değerlendirme sistemi
 - Kalite kontrol değerlendirme formları
 - Detaylı raporlama ve analiz araçları
+- Çağrı kuyrukları yönetimi
 
 ## 🛠️ Teknolojiler
 
@@ -44,4 +45,4 @@ npm start
 Projeye katkıda bulunmak için lütfen CONTRIBUTING.md dosyasını inceleyin.
 
 ## 📝 Lisans
-Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için LICENSE dosyasını inceleyebilirsiniz. 
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için LICENSE dosyasını inceleyebilirsiniz.
