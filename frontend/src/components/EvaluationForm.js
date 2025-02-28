@@ -10,22 +10,15 @@ import {
   Button,
   Slider,
   FormControl,
-  FormLabel,
-  FormGroup,
   FormControlLabel,
   Checkbox,
-  RadioGroup,
-  Radio,
   CircularProgress,
   Alert,
   Divider,
-  Card,
-  CardContent,
   Chip,
   MenuItem,
   Select,
   InputLabel,
-  Tooltip,
   IconButton,
   TableContainer
 } from '@mui/material';
@@ -34,9 +27,6 @@ import {
   Cancel as CancelIcon,
   PlayArrow as PlayIcon,
   Pause as PauseIcon,
-  Info as InfoIcon,
-  Warning as WarningIcon,
-  Delete as DeleteIcon,
   Refresh as RefreshIcon,
   CloudUpload as UploadIcon
 } from '@mui/icons-material';
@@ -44,11 +34,14 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import trLocale from 'date-fns/locale/tr';
 import { fetchCriteria } from '../store/criteriaSlice';
+import { createEvaluation } from '../store/evaluationsSlice';
+import { fetchEvaluations } from '../store/evaluationsSlice';
 
 const EvaluationForm = () => {
   const { callId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
   
   // Redux state
   const { criteria, loading: criteriaLoading } = useSelector(state => state.criteria);
@@ -249,22 +242,58 @@ const EvaluationForm = () => {
     setError(null);
     
     try {
-      // In a real app, you would submit the form data to an API
-      // For now, we'll just simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Değerlendirme verilerini hazırla
+      const evaluationData = {
+        callId: callId || Math.floor(Math.random() * 1000).toString(), // Eğer callId yoksa random bir ID oluştur
+        agentId: formData.agentId,
+        queue: formData.queue,
+        callDate: formData.callDate.toISOString(),
+        evaluationDate: new Date().toISOString(),
+        phoneNumber: formData.phoneNumber,
+        scores: scores,
+        criticalErrors: criticalErrors,
+        comments: formData.comments,
+        totalScore: calculateTotalScore(),
+        evaluatorId: user.id
+      };
       
-      setSuccess(true);
+      console.log('Gönderilen değerlendirme verileri:', evaluationData);
       
-      // Başarılı kayıt sonrası formu sıfırla
-      handleReset();
+      // Redux action'ını dispatch et
+      const resultAction = await dispatch(createEvaluation(evaluationData));
       
-      // Başarılı kayıt mesajını göster (pop-up yerine alert kullanıyoruz)
-      // 5 saniye sonra başarı mesajını kaldır
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
+      // Eğer işlem başarılıysa
+      if (createEvaluation.fulfilled.match(resultAction)) {
+        console.log('Değerlendirme başarıyla kaydedildi:', resultAction.payload);
+        setSuccess(true);
+        
+        // Başarılı kayıt sonrası formu sıfırla
+        handleReset();
+        
+        // Değerlendirme listesini güncelle
+        dispatch(fetchEvaluations())
+          .unwrap()
+          .then(result => {
+            console.log('Değerlendirme listesi güncellendi:', result);
+            
+            // Başarılı kayıt mesajını göster ve değerlendirme listesine yönlendir
+            setTimeout(() => {
+              setSuccess(false);
+              // Başarılı kayıt sonrası değerlendirme listesine yönlendir
+              navigate('/evaluations');
+            }, 2000);
+          })
+          .catch(error => {
+            console.error('Değerlendirme listesi güncellenirken hata:', error);
+          });
+      } else {
+        // Eğer bir hata varsa
+        console.error('Değerlendirme kaydedilirken hata:', resultAction.error);
+        setError(resultAction.payload || 'Değerlendirme kaydedilirken bir hata oluştu');
+      }
     } catch (err) {
-      setError('Değerlendirme kaydedilirken bir hata oluştu');
+      console.error('Değerlendirme kaydedilirken beklenmeyen hata:', err);
+      setError('Değerlendirme kaydedilirken bir hata oluştu: ' + (err.message || err));
     } finally {
       setSubmitting(false);
     }

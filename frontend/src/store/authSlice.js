@@ -10,19 +10,34 @@ const MOCK_USERS = [
     id: 1,
     username: 'admin',
     password: 'admin123',
-    firstName: 'Admin',
-    lastName: 'User',
+    firstName: 'Ahmet',
+    lastName: 'Yönetici',
     role: 'admin',
+    employeeId: 'A001',
+    team: 'Yönetim',
     token: 'mock-jwt-token-admin-123456'
   },
   {
     id: 2,
-    username: 'evaluator',
-    password: 'eval123',
-    firstName: 'Evaluator',
-    lastName: 'User',
-    role: 'evaluator',
-    token: 'mock-jwt-token-evaluator-123456'
+    username: 'expert',
+    password: 'expert123',
+    firstName: 'Ayşe',
+    lastName: 'Uzman',
+    role: 'expert',
+    employeeId: 'E001',
+    team: 'Kalite',
+    token: 'mock-jwt-token-expert-123456'
+  },
+  {
+    id: 3,
+    username: 'agent',
+    password: 'agent123',
+    firstName: 'Mehmet',
+    lastName: 'Temsilci',
+    role: 'agent',
+    employeeId: 'T001',
+    team: 'Satış',
+    token: 'mock-jwt-token-agent-123456'
   }
 ];
 
@@ -52,7 +67,9 @@ export const login = createAsyncThunk(
           username: user.username,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role
+          role: user.role,
+          employeeId: user.employeeId,
+          team: user.team
         },
         token: user.token
       };
@@ -94,7 +111,9 @@ export const refreshToken = createAsyncThunk(
           username: user.username,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role
+          role: user.role,
+          employeeId: user.employeeId,
+          team: user.team
         },
         token: user.token
       };

@@ -26,141 +26,100 @@ import {
 } from '@mui/material';
 import {
   Search as SearchIcon,
-  FilterList as FilterIcon,
   Visibility as VisibilityIcon,
   GetApp as DownloadIcon
 } from '@mui/icons-material';
 
-// Not: Redux entegrasyonu henüz yapılmadı
-// import { fetchEvaluations } from '../store/evaluationsSlice';
+// Redux entegrasyonu
+import { fetchEvaluations } from '../store/evaluationsSlice';
 
 const EvaluationList = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { evaluations, loading, error } = useSelector(state => state.evaluations);
+  const { user } = useSelector(state => state.auth);
   
-  // Gerçek uygulamada Redux store'dan verileri çekeceğiz
-  // const { evaluations, loading, error } = useSelector(state => state.evaluations);
-  
-  // Mock veriler
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [evaluations] = useState([
-    {
-      id: '1',
-      call: {
-        id: '101',
-        agentName: 'Ahmet Yılmaz',
-        phoneNumber: '+90 555 123 4567',
-        callDate: '2023-08-10T14:30:00',
-        duration: '00:05:30',
-        queue: 'Destek'
-      },
-      evaluator: {
-        id: '201',
-        name: 'Mehmet Uzman'
-      },
-      totalScore: 81.5,
-      createdAt: '2023-08-11T09:45:00'
-    },
-    {
-      id: '2',
-      call: {
-        id: '102',
-        agentName: 'Ayşe Demir',
-        phoneNumber: '+90 555 789 1234',
-        callDate: '2023-08-10T10:15:00',
-        duration: '00:12:45',
-        queue: 'Satış'
-      },
-      evaluator: {
-        id: '202',
-        name: 'Zeynep Kalite'
-      },
-      totalScore: 92.0,
-      createdAt: '2023-08-11T11:30:00'
-    },
-    {
-      id: '3',
-      call: {
-        id: '103',
-        agentName: 'Mustafa Kaya',
-        phoneNumber: '+90 555 456 7890',
-        callDate: '2023-08-09T16:20:00',
-        duration: '00:08:15',
-        queue: 'Teknik Destek'
-      },
-      evaluator: {
-        id: '203',
-        name: 'Ali Denetçi'
-      },
-      totalScore: 68.5,
-      createdAt: '2023-08-10T14:25:00'
-    },
-    {
-      id: '4',
-      call: {
-        id: '104',
-        agentName: 'Fatma Şahin',
-        phoneNumber: '+90 555 234 5678',
-        callDate: '2023-08-09T11:10:00',
-        duration: '00:15:20',
-        queue: 'Müşteri Hizmetleri'
-      },
-      evaluator: {
-        id: '204',
-        name: 'Mehmet Uzman'
-      },
-      totalScore: 75.0,
-      createdAt: '2023-08-10T09:15:00'
-    },
-    {
-      id: '5',
-      call: {
-        id: '105',
-        agentName: 'Emre Yıldırım',
-        phoneNumber: '+90 555 345 6789',
-        callDate: '2023-08-08T09:30:00',
-        duration: '00:04:50',
-        queue: 'Satış'
-      },
-      evaluator: {
-        id: '205',
-        name: 'Zeynep Kalite'
-      },
-      totalScore: 88.5,
-      createdAt: '2023-08-09T10:45:00'
-    }
-  ]);
-  
-  // Arama, filtreleme ve sayfalama için state'ler
+  const [filteredEvaluations, setFilteredEvaluations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterQueue, setFilterQueue] = useState('');
   const [filterEvaluator, setFilterEvaluator] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   
-  // Gerçek uygulamada değerlendirmeleri yükle
-  /*
   useEffect(() => {
-    dispatch(fetchEvaluations());
+    console.log('EvaluationList bileşeni yükleniyor...');
+    
+    // Değerlendirmeleri yükle
+    dispatch(fetchEvaluations())
+      .unwrap()
+      .then(result => {
+        console.log('Değerlendirmeler başarıyla yüklendi:', result);
+        console.log('Değerlendirme sayısı:', result.length);
+      })
+      .catch(error => {
+        console.error('Değerlendirmeler yüklenirken hata:', error);
+      });
   }, [dispatch]);
-  */
   
-  // Arama terimine ve filtrelere göre değerlendirmeleri filtrele
-  const filteredEvaluations = evaluations.filter(evaluation => {
-    const matchesSearchTerm = 
-      evaluation.call.agentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      evaluation.call.phoneNumber.includes(searchTerm);
+  useEffect(() => {
+    console.log('Filtreleme için değerlendirmeler:', evaluations);
     
-    const matchesQueueFilter = filterQueue === '' || evaluation.call.queue === filterQueue;
-    const matchesEvaluatorFilter = filterEvaluator === '' || evaluation.evaluator.name === filterEvaluator;
+    if (!evaluations || !Array.isArray(evaluations)) {
+      console.log('Değerlendirmeler henüz yüklenmedi veya geçerli bir dizi değil');
+      setFilteredEvaluations([]);
+      return;
+    }
     
-    return matchesSearchTerm && matchesQueueFilter && matchesEvaluatorFilter;
-  });
+    console.log('Toplam değerlendirme sayısı:', evaluations.length);
+    
+    // Kullanıcı rolüne göre filtreleme
+    let filtered = [...evaluations];
+    
+    // Eğer kullanıcı agent ise, sadece kendi değerlendirmelerini göster
+    if (user && user.role === 'agent') {
+      filtered = filtered.filter(evaluation => 
+        evaluation.call && 
+        evaluation.call.agentId && 
+        evaluation.call.agentId === user.id
+      );
+    }
+    
+    // Arama terimine göre filtreleme
+    if (searchTerm) {
+      filtered = filtered.filter(evaluation => {
+        const agentName = evaluation.call && evaluation.call.agentName ? evaluation.call.agentName.toLowerCase() : '';
+        const phoneNumber = evaluation.call && evaluation.call.phoneNumber ? evaluation.call.phoneNumber.toLowerCase() : '';
+        const searchLower = searchTerm.toLowerCase();
+        
+        return agentName.includes(searchLower) || phoneNumber.includes(searchLower);
+      });
+    }
+    
+    // Kuyruğa göre filtreleme
+    if (filterQueue) {
+      filtered = filtered.filter(evaluation => 
+        evaluation.call && 
+        evaluation.call.queue && 
+        evaluation.call.queue === filterQueue
+      );
+    }
+    
+    // Değerlendiriciye göre filtreleme
+    if (filterEvaluator) {
+      filtered = filtered.filter(evaluation => 
+        evaluation.evaluator && 
+        evaluation.evaluator.name && 
+        evaluation.evaluator.name === filterEvaluator
+      );
+    }
+    
+    console.log('Filtreleme sonrası değerlendirme sayısı:', filtered.length);
+    setFilteredEvaluations(filtered);
+  }, [evaluations, searchTerm, filterQueue, filterEvaluator, user]);
   
   // Eşsiz kuyruk ve değerlendirici filtre seçeneklerini oluştur
-  const queueOptions = [...new Set(evaluations.map(e => e.call.queue))];
-  const evaluatorOptions = [...new Set(evaluations.map(e => e.evaluator.name))];
+  const queueOptions = evaluations && Array.isArray(evaluations) ? [...new Set(evaluations.filter(e => e.call && e.call.queue).map(e => e.call.queue))] : [];
+  const evaluatorOptions = evaluations && Array.isArray(evaluations) ? [...new Set(evaluations.filter(e => e.evaluator && e.evaluator.name).map(e => e.evaluator.name))] : [];
   
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -187,6 +146,17 @@ const EvaluationList = () => {
   };
   
   const handleViewEvaluation = (evaluationId) => {
+    console.log('Görüntülenen değerlendirme ID:', evaluationId);
+    
+    // Değerlendirme ID'sini kontrol et
+    const evaluation = filteredEvaluations.find(e => e.id === evaluationId);
+    if (!evaluation) {
+      console.error('Değerlendirme bulunamadı:', evaluationId);
+      alert('Değerlendirme detayları yüklenirken bir hata oluştu.');
+      return;
+    }
+    
+    console.log('Görüntülenecek değerlendirme:', evaluation);
     navigate(`/evaluations/${evaluationId}`);
   };
   

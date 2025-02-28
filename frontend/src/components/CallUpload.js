@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -25,14 +25,21 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Slider
 } from '@mui/material';
 import {
   CloudUpload as UploadIcon,
   Check as CheckIcon,
   Close as CloseIcon,
   AudioFile as AudioFileIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
+  PlayArrow as PlayIcon,
+  Pause as PauseIcon,
+  FastForward as FastForwardIcon,
+  FastRewind as FastRewindIcon,
+  VolumeUp as VolumeUpIcon,
+  VolumeOff as VolumeOffIcon
 } from '@mui/icons-material';
 
 // Not: Redux entegrasyonu henüz yapılmadı
@@ -61,6 +68,14 @@ const CallUpload = () => {
   const [uploadError, setUploadError] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [fileToDelete, setFileToDelete] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const audioRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   
   // Yükleme için örnek kuyruk seçenekleri
   const queueOptions = [
@@ -99,19 +114,41 @@ const CallUpload = () => {
   
   // Dosya işleme fonksiyonları
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files);
+    const file = event.target.files[0];
     
-    // Ses dosyası kontrolü
-    const validFiles = files.filter(file => {
-      const fileType = file.type;
-      return fileType.includes('audio');
-    });
-    
-    if (validFiles.length < files.length) {
-      alert('Sadece ses dosyaları (.mp3, .wav, vb.) yüklenebilir!');
+    if (file) {
+      // Dosya boyutu kontrolü (max 20MB)
+      if (file.size > 20 * 1024 * 1024) {
+        alert('Dosya boyutu çok büyük. Maksimum 20MB yükleyebilirsiniz.');
+        return;
+      }
+      
+      // Ses dosyası olduğundan emin olalım
+      if (!file.type.includes('audio/')) {
+        alert('Sadece ses dosyaları yükleyebilirsiniz.');
+        return;
+      }
+      
+      // Dosyayı önizleme için yükleyelim
+      const objectUrl = URL.createObjectURL(file);
+      
+      // Geçici bir Audio nesnesi ile dosyanın çalınabilir olduğunu kontrol edelim
+      const testAudio = new Audio(objectUrl);
+      testAudio.addEventListener('error', () => {
+        alert('Bu ses dosyası oynatılamıyor veya desteklenmeyen bir formatta.');
+        URL.revokeObjectURL(objectUrl); // URL'yi temizle
+        return;
+      });
+      
+      // Eğer dosya geçerliyse, seçilmiş dosya olarak ayarlayalım
+      setSelectedFile(file);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setDuration(0);
+      
+      // Dosya seçildikten sonra input alanını temizleyelim
+      event.target.value = '';
     }
-    
-    setSelectedFiles(prevFiles => [...prevFiles, ...validFiles]);
   };
   
   const handleRemoveFile = (fileIndex) => {
@@ -373,6 +410,122 @@ const CallUpload = () => {
     return false;
   };
   
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        // Yerel dosyaları oynatırken daha az hata olasılığı var, 
+        // ancak yine de hata yakalama ekliyoruz
+        const playPromise = audioRef.current.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            setIsPlaying(true);
+          }).catch(e => {
+            console.error("Ses dosyası oynatılamadı:", e);
+            setIsPlaying(false);
+            alert("Ses dosyası oynatılamadı. Dosya bulunamıyor veya desteklenmeyen bir format olabilir.");
+          });
+        }
+      }
+    }
+  };
+  
+  const handleSeek = (event, newValue) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = newValue;
+      setCurrentTime(newValue);
+    }
+  };
+  
+  const handleVolumeChange = (event, newValue) => {
+    const newVolume = newValue / 100;
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+      setVolume(newVolume);
+      
+      if (newVolume === 0) {
+        setIsMuted(true);
+      } else if (isMuted) {
+        setIsMuted(false);
+      }
+    }
+  };
+  
+  const toggleMute = () => {
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.volume = volume;
+      } else {
+        audioRef.current.volume = 0;
+      }
+      setIsMuted(!isMuted);
+    }
+  };
+  
+  const handlePlaybackRateChange = (event) => {
+    const rate = event.target.value;
+    if (audioRef.current) {
+      audioRef.current.playbackRate = rate;
+      setPlaybackRate(rate);
+    }
+  };
+  
+  const formatTime = (time) => {
+    if (isNaN(time)) return '00:00';
+    
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+  
+  const skipForward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, duration);
+    }
+  };
+  
+  const skipBackward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
+    }
+  };
+  
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    
+    if (!audioElement) return;
+    
+    const handleTimeUpdate = () => {
+      setCurrentTime(audioElement.currentTime);
+    };
+    
+    const handleLoadedMetadata = () => {
+      setDuration(audioElement.duration);
+    };
+    
+    const handleEnded = () => setIsPlaying(false);
+    const handlePause = () => setIsPlaying(false);
+    const handlePlay = () => setIsPlaying(true);
+    
+    audioElement.addEventListener('timeupdate', handleTimeUpdate);
+    audioElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audioElement.addEventListener('ended', handleEnded);
+    audioElement.addEventListener('pause', handlePause);
+    audioElement.addEventListener('play', handlePlay);
+    
+    return () => {
+      audioElement.removeEventListener('timeupdate', handleTimeUpdate);
+      audioElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audioElement.removeEventListener('ended', handleEnded);
+      audioElement.removeEventListener('pause', handlePause);
+      audioElement.removeEventListener('play', handlePlay);
+    };
+  }, []);
+  
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -449,6 +602,97 @@ const CallUpload = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      
+      {/* Dosya önizleme alanı */}
+      {selectedFile && (
+        <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+          <Typography variant="subtitle1" gutterBottom>
+            Ses Dosyası Önizleme
+          </Typography>
+          
+          <audio 
+            ref={audioRef} 
+            src={URL.createObjectURL(selectedFile)} 
+            preload="auto"
+            style={{ display: 'none' }}
+          />
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <IconButton onClick={skipBackward}>
+              <FastRewindIcon />
+            </IconButton>
+            
+            <IconButton 
+              onClick={togglePlayPause} 
+              sx={{ mx: 1 }}
+            >
+              {isPlaying ? <PauseIcon fontSize="large" /> : <PlayIcon fontSize="large" />}
+            </IconButton>
+            
+            <IconButton onClick={skipForward}>
+              <FastForwardIcon />
+            </IconButton>
+            
+            <Typography variant="body2" sx={{ mx: 1, minWidth: '70px' }}>
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </Typography>
+            
+            <Box sx={{ width: '100%', mx: 2 }}>
+              <Slider
+                value={currentTime}
+                max={duration || 100}
+                onChange={handleSeek}
+                sx={{ color: 'primary.main' }}
+              />
+            </Box>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', minWidth: '180px' }}>
+              <IconButton onClick={toggleMute}>
+                {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+              </IconButton>
+              
+              <Slider
+                value={isMuted ? 0 : volume * 100}
+                onChange={handleVolumeChange}
+                aria-label="Ses Seviyesi"
+                sx={{ width: '80px', mx: 1 }}
+              />
+              
+              <FormControl variant="standard" sx={{ minWidth: 80, ml: 1 }}>
+                <Select
+                  value={playbackRate}
+                  onChange={handlePlaybackRateChange}
+                  size="small"
+                >
+                  <MenuItem value={0.5}>0.5x</MenuItem>
+                  <MenuItem value={1}>1x</MenuItem>
+                  <MenuItem value={1.5}>1.5x</MenuItem>
+                  <MenuItem value={2}>2x</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}>
+            <Typography variant="body2">
+              Dosya: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+            </Typography>
+            
+            <Button 
+              color="secondary" 
+              size="small"
+              onClick={() => {
+                setSelectedFile(null);
+                setIsPlaying(false);
+                setCurrentTime(0);
+                setDuration(0);
+              }}
+            >
+              Dosyayı Kaldır
+            </Button>
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };
