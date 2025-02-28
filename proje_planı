@@ -1,0 +1,5 @@
+### Proje Açıklaması:
+Bir **çağrı merkezi kalite yönetimi ve performans analiz sistemi** geliştiriyoruz. 
+Bu proje, çağrı merkezi müşteri temsilcilerinin performansını değerlendirmek, kalite uzmanlarının çağrıları analiz etmesini sağlamak ve detaylı raporlama yapmak için **Django (Backend) ve PostgreSQL veritabanı** ile geliştirilecektir.  
+Frontend için **Vue.js veya React** kullanılacaktır.  
+Projeyi GitHub’da açık kaynak olarak yayınlayarak, topluluğun katkı sağlamasını istiyoruz.  
