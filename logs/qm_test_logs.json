@@ -1,0 +1,296 @@
+[
+  {
+    "timestamp": "2025-02-28T23:22:07.678932",
+    "level": "INFO",
+    "message": "Test senaryolar\u0131 ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:07.679165",
+    "level": "INFO",
+    "message": "Giri\u015f Testi ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:07.679263",
+    "level": "INFO",
+    "message": "Giri\u015f testi ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:07.679349",
+    "level": "INFO",
+    "message": "admin kullan\u0131c\u0131s\u0131 ile giri\u015f deneniyor",
+    "data": "{\"username\": \"admin\", \"password\": \"admin123\", \"role\": \"admin\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:08.179968",
+    "level": "SUCCESS",
+    "message": "admin kullan\u0131c\u0131s\u0131 ba\u015far\u0131yla giri\u015f yapt\u0131",
+    "data": "{\"role\": \"admin\", \"login_time\": \"2025-02-28T23:22:08.179947\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:08.180649",
+    "level": "INFO",
+    "message": "expert kullan\u0131c\u0131s\u0131 ile giri\u015f deneniyor",
+    "data": "{\"username\": \"expert\", \"password\": \"expert123\", \"role\": \"expert\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:08.683384",
+    "level": "SUCCESS",
+    "message": "expert kullan\u0131c\u0131s\u0131 ba\u015far\u0131yla giri\u015f yapt\u0131",
+    "data": "{\"role\": \"expert\", \"login_time\": \"2025-02-28T23:22:08.683352\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:08.684101",
+    "level": "INFO",
+    "message": "agent kullan\u0131c\u0131s\u0131 ile giri\u015f deneniyor",
+    "data": "{\"username\": \"agent\", \"password\": \"agent123\", \"role\": \"agent\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.189781",
+    "level": "SUCCESS",
+    "message": "agent kullan\u0131c\u0131s\u0131 ba\u015far\u0131yla giri\u015f yapt\u0131",
+    "data": "{\"role\": \"agent\", \"login_time\": \"2025-02-28T23:22:09.189767\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.190155",
+    "level": "INFO",
+    "message": "Giri\u015f testleri tamamland\u0131",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.190304",
+    "level": "SUCCESS",
+    "message": "Giri\u015f Testi ba\u015far\u0131yla tamamland\u0131",
+    "data": "{\"duration\": \"1.51 saniye\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.190464",
+    "level": "INFO",
+    "message": "De\u011ferlendirme Formu Testi ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.190585",
+    "level": "INFO",
+    "message": "De\u011ferlendirme formu testi ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.190737",
+    "level": "INFO",
+    "message": "De\u011ferlendirme formu doldurulacak",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.190859",
+    "level": "INFO",
+    "message": "Temsilci se\u00e7ildi: Temsilci 3",
+    "data": "{\"agent_id\": 3}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.191005",
+    "level": "INFO",
+    "message": "\u00c7a\u011fr\u0131 bilgileri girildi",
+    "data": "{\"queue\": \"Sat\\u0131\\u015f\", \"phone_number\": \"5559410407\", \"call_date\": \"2025-02-28T23:22:09.191003\", \"duration\": \"00:9:16\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.191137",
+    "level": "DEBUG",
+    "message": "M\u00fc\u015fteri Selamlama kriteri i\u00e7in puan: 68",
+    "data": "{\"criterion_id\": 1, \"score\": 68}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.191260",
+    "level": "DEBUG",
+    "message": "Problem Anlama kriteri i\u00e7in puan: 97",
+    "data": "{\"criterion_id\": 2, \"score\": 97}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.191383",
+    "level": "DEBUG",
+    "message": "\u00c7\u00f6z\u00fcm Sunma kriteri i\u00e7in puan: 80",
+    "data": "{\"criterion_id\": 3, \"score\": 80}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.191511",
+    "level": "DEBUG",
+    "message": "\u0130leti\u015fim Becerileri kriteri i\u00e7in puan: 70",
+    "data": "{\"criterion_id\": 4, \"score\": 70}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.191634",
+    "level": "DEBUG",
+    "message": "Kapan\u0131\u015f kriteri i\u00e7in puan: 94",
+    "data": "{\"criterion_id\": 5, \"score\": 94}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.191774",
+    "level": "INFO",
+    "message": "Toplam puan hesapland\u0131: 81.80",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:09.191908",
+    "level": "INFO",
+    "message": "De\u011ferlendirme formu g\u00f6nderiliyor",
+    "data": "{\"agent_id\": 3, \"agent_name\": \"Temsilci 3\", \"call_data\": {\"queue\": \"Sat\\u0131\\u015f\", \"phone_number\": \"5559410407\", \"call_date\": \"2025-02-28T23:22:09.191003\", \"duration\": \"00:9:16\"}, \"scores\": {\"1\": 68, \"2\": 97, \"3\": 80, \"4\": 70, \"5\": 94}, \"critical_errors\": {}, \"comments\": \"Bu bir test de\\u011ferlendirmesidir. Temsilci Temsilci 3 genel olarak iyi performans g\\u00f6sterdi.\", \"total_score\": 81.8}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:10.195574",
+    "level": "SUCCESS",
+    "message": "De\u011ferlendirme ba\u015far\u0131yla kaydedildi",
+    "data": "{\"evaluation_id\": \"eval_1740774130\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:10.196150",
+    "level": "INFO",
+    "message": "De\u011ferlendirme formu testi tamamland\u0131",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:10.196360",
+    "level": "SUCCESS",
+    "message": "De\u011ferlendirme Formu Testi ba\u015far\u0131yla tamamland\u0131",
+    "data": "{\"duration\": \"1.01 saniye\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:10.196584",
+    "level": "INFO",
+    "message": "De\u011ferlendirme Listesi Testi ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:10.196816",
+    "level": "INFO",
+    "message": "De\u011ferlendirme listesi testi ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:10.197000",
+    "level": "INFO",
+    "message": "De\u011ferlendirme listesi y\u00fckleniyor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.002263",
+    "level": "INFO",
+    "message": "14 adet de\u011ferlendirme y\u00fcklendi",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.002977",
+    "level": "INFO",
+    "message": "Filtre uygulan\u0131yor: Sat\u0131\u015f",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.003563",
+    "level": "INFO",
+    "message": "Filtreleme sonucu 7 de\u011ferlendirme listelendi",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.004014",
+    "level": "INFO",
+    "message": "De\u011ferlendirme detay\u0131 g\u00f6r\u00fcnt\u00fcleniyor: eval_3650",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.509477",
+    "level": "SUCCESS",
+    "message": "De\u011ferlendirme detaylar\u0131 ba\u015far\u0131yla y\u00fcklendi",
+    "data": "{\"evaluation_id\": \"eval_3650\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.510760",
+    "level": "INFO",
+    "message": "De\u011ferlendirme listesi testi tamamland\u0131",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.511492",
+    "level": "SUCCESS",
+    "message": "De\u011ferlendirme Listesi Testi ba\u015far\u0131yla tamamland\u0131",
+    "data": "{\"duration\": \"1.31 saniye\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.512267",
+    "level": "INFO",
+    "message": "Ses Oynat\u0131c\u0131 Testi ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.512987",
+    "level": "INFO",
+    "message": "Ses oynat\u0131c\u0131 testi ba\u015flat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:11.513556",
+    "level": "INFO",
+    "message": "Ses dosyas\u0131 y\u00fckleniyor",
+    "data": "{\"name\": \"call_recording_1022.mp3\", \"size\": 1654784, \"type\": \"audio/mpeg\", \"duration\": 279}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.219176",
+    "level": "SUCCESS",
+    "message": "Ses dosyas\u0131 ba\u015far\u0131yla y\u00fcklendi: call_recording_1022.mp3",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.220375",
+    "level": "INFO",
+    "message": "Ses dosyas\u0131 oynat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.525175",
+    "level": "SUCCESS",
+    "message": "Ses dosyas\u0131 ba\u015far\u0131yla oynat\u0131l\u0131yor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.528257",
+    "level": "INFO",
+    "message": "Oynatma h\u0131z\u0131 1.5x olarak ayarland\u0131",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.529066",
+    "level": "INFO",
+    "message": "Oynatma h\u0131z\u0131 0.5x olarak ayarland\u0131",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.529892",
+    "level": "INFO",
+    "message": "Ses dosyas\u0131 duraklat\u0131ld\u0131",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.732215",
+    "level": "INFO",
+    "message": "Ses dosyas\u0131 devam ettiriliyor",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.733352",
+    "level": "INFO",
+    "message": "Ses oynat\u0131c\u0131 testi tamamland\u0131",
+    "data": null
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.734154",
+    "level": "SUCCESS",
+    "message": "Ses Oynat\u0131c\u0131 Testi ba\u015far\u0131yla tamamland\u0131",
+    "data": "{\"duration\": \"1.22 saniye\"}"
+  },
+  {
+    "timestamp": "2025-02-28T23:22:12.734835",
+    "level": "INFO",
+    "message": "Test senaryolar\u0131 tamamland\u0131",
+    "data": "{\"total\": 4, \"success\": 4, \"failed\": 0, \"error\": 0}"
+  }
+]
