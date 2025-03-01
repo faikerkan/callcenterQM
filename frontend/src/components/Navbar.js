@@ -79,13 +79,6 @@ const Navbar = () => {
       implemented: true
     },
     { 
-      text: 'Çağrı Listesi', 
-      icon: <PhoneIcon />, 
-      path: '/calls',
-      showAlways: true,
-      implemented: true
-    },
-    { 
       text: 'Çağrı Değerlendir', 
       icon: <AssessmentIcon />, 
       path: '/calls/new/evaluate',

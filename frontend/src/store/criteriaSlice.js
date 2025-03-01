@@ -1,42 +1,42 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Mock veri - API entegrasyonu olmadığı için
-const MOCK_CRITERIA = [
-  { id: 1, name: 'Açılış ve Karşılama', description: 'Müşteriye uygun bir şekilde merhaba diyerek kendini tanıtma', weight: 5, maxScore: 5 },
-  { id: 2, name: 'Etkin Dinleme ve Anlama', description: 'Müşteriyi aktif dinleme ve doğru anlama', weight: 15, maxScore: 15 },
-  { id: 3, name: 'Analiz ve Etkin Soru Sorma', description: 'Müşterinin sorununu analiz etme ve doğru soruları sorma', weight: 15, maxScore: 15 },
-  { id: 4, name: 'Görüşme Kirliliği Yaratacak Söylem ve Sesler', description: 'Görüşme sırasında uygunsuz söylem ve seslerden kaçınma', weight: 10, maxScore: 10 },
-  { id: 5, name: 'Kendinden Emin, Canlı ve Nezaketli Ses Tonu', description: 'Ses tonunun kendinden emin, canlı ve nezaketli olması', weight: 10, maxScore: 10 },
-  { id: 6, name: 'Abonenin Sorununun Sahiplenilmesi', description: 'Müşteri sorununu sahiplenme ve çözüm odaklı yaklaşım', weight: 5, maxScore: 5 },
-  { id: 7, name: 'Empati', description: 'Müşteri ile empati kurabilme yeteneği', weight: 5, maxScore: 5 },
-  { id: 8, name: 'Süre ve Stres Yönetimi', description: 'Çağrı süresini etkin kullanma ve stres yönetimi', weight: 5, maxScore: 5 },
-  { id: 9, name: 'Doğru Yönlendirme', description: 'Müşteriyi doğru departmana veya çözüme yönlendirme', weight: 10, maxScore: 10 },
-  { id: 10, name: 'Bilgiyi Anlaşılır Biçimde Paylaşma, İkna Etme', description: 'Bilgileri anlaşılır şekilde aktarma ve ikna edici olma', weight: 10, maxScore: 10 },
-  { id: 11, name: 'Uygun Kapanış Anonsu Verildi mi?', description: 'Görüşme sonunda uygun kapanış cümlelerini kullanma', weight: 5, maxScore: 5 },
-  { id: 12, name: 'İlgili/Yönlendirilen Ekiple İlgili Bilgi Verildi mi?', description: 'Müşteriye yönlendirilen ekip hakkında yeterli bilgi verme', weight: 5, maxScore: 5 }
-];
-
-// API URL
-const API_URL = 'http://localhost:8000/api/v1';
+// API URL'yi bir değişkene atayalım
+const API_URL = 'http://localhost:8000/api';
 
 // Kriterleri getirme işlemi için async thunk
 export const fetchCriteria = createAsyncThunk(
   'criteria/fetchCriteria',
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
+      const { auth } = getState();
+      
       // Gerçek API çağrısı - şu an mock kullanıyoruz
-      // const response = await axios.get(`${API_URL}/criteria/`);
+      // const response = await axios.get(`${API_URL}/criteria/`, {
+      //   headers: { Authorization: `Bearer ${auth.token}` }
+      // });
       // return response.data;
       
-      // API entegrasyonu için mock veri dönüş
-      // 500ms gecikme ekleyerek gerçekçi bir yükleme durumu simüle ediyoruz
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Mock veri dönüşü
+      await new Promise(resolve => setTimeout(resolve, 500)); // Gerçekçi bir yükleme süresi
       
-      return MOCK_CRITERIA;
+      return [
+        { id: 1, name: 'Açılış ve Karşılama', description: 'Müşteri uygun şekilde karşılandı mı?', weight: 5, maxScore: 5 },
+        { id: 2, name: 'Etkin Dinleme ve Anlama', description: 'Temsilci müşteriyi etkin bir şekilde dinledi ve anladı mı?', weight: 15, maxScore: 15 },
+        { id: 3, name: 'Analiz ve Etkin Soru Sorma', description: 'Temsilci doğru analiz yapıp etkin sorular sordu mu?', weight: 15, maxScore: 15 },
+        { id: 4, name: 'Görüşme Kirliliği Yaratacak Söylem ve Sesler', description: 'Görüşmede kirlilik yaratan söylem ve sesler var mıydı?', weight: 10, maxScore: 10 },
+        { id: 5, name: 'Kendinden Emin, Canlı ve Nezaketli Ses Tonu', description: 'Temsilcinin ses tonu uygun muydu?', weight: 10, maxScore: 10 },
+        { id: 6, name: 'Abonenin Sorununun Sahiplenilmesi', description: 'Temsilci abonenin sorununu sahiplendi mi?', weight: 5, maxScore: 5 },
+        { id: 7, name: 'Empati', description: 'Temsilci yeterli empati gösterdi mi?', weight: 5, maxScore: 5 },
+        { id: 8, name: 'Süre ve Stres Yönetimi', description: 'Temsilci süre ve stresi iyi yönetti mi?', weight: 5, maxScore: 5 },
+        { id: 9, name: 'Doğru Yönlendirme', description: 'Temsilci doğru yönlendirme yaptı mı?', weight: 10, maxScore: 10 },
+        { id: 10, name: 'Bilgiyi Anlaşılır Biçimde Paylaşma, İkna Etme', description: 'Temsilci bilgiyi anlaşılır şekilde paylaştı ve ikna etti mi?', weight: 10, maxScore: 10 },
+        { id: 11, name: 'Uygun Kapanış Anonsu Verildi mi?', description: 'Temsilci uygun kapanış anonsu verdi mi?', weight: 5, maxScore: 5 },
+        { id: 12, name: 'İlgili/Yönlendirilen Ekibe İlgili Bilgi Verildi mi?', description: 'Temsilci ilgili ekiplere gerekli bilgileri verdi mi?', weight: 5, maxScore: 5 }
+      ];
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || 'Kriterler alınırken bir hata oluştu'
+        error.response?.data?.message || 'Kriterler getirilirken bir hata oluştu'
       );
     }
   }
@@ -45,20 +45,21 @@ export const fetchCriteria = createAsyncThunk(
 // Kriter ekleme işlemi için async thunk
 export const addCriterion = createAsyncThunk(
   'criteria/addCriterion',
-  async (criterionData, { rejectWithValue }) => {
+  async (criterionData, { getState, rejectWithValue }) => {
     try {
+      const { auth } = getState();
+      
       // Gerçek API çağrısı - şu an mock kullanıyoruz
-      // const response = await axios.post(`${API_URL}/criteria/`, criterionData);
+      // const response = await axios.post(`${API_URL}/criteria/`, criterionData, {
+      //   headers: { Authorization: `Bearer ${auth.token}` }
+      // });
       // return response.data;
       
-      // API entegrasyonu için mock veri dönüş
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Yeni kriter için ID oluştur
-      const newId = Math.max(...MOCK_CRITERIA.map(c => c.id)) + 1;
+      // Mock veri dönüşü
+      await new Promise(resolve => setTimeout(resolve, 500)); // Gerçekçi bir yükleme süresi
       
       const newCriterion = {
-        id: newId,
+        id: Date.now(),
         ...criterionData
       };
       
@@ -71,20 +72,21 @@ export const addCriterion = createAsyncThunk(
   }
 );
 
-// createCriterion, addCriterion'un bir alias'ı olarak tanımla
-export const createCriterion = addCriterion;
-
 // Kriter güncelleme işlemi için async thunk
 export const updateCriterion = createAsyncThunk(
   'criteria/updateCriterion',
-  async ({ id, criterionData }, { rejectWithValue }) => {
+  async ({ id, criterionData }, { getState, rejectWithValue }) => {
     try {
+      const { auth } = getState();
+      
       // Gerçek API çağrısı - şu an mock kullanıyoruz
-      // const response = await axios.put(`${API_URL}/criteria/${id}/`, criterionData);
+      // const response = await axios.put(`${API_URL}/criteria/${id}/`, criterionData, {
+      //   headers: { Authorization: `Bearer ${auth.token}` }
+      // });
       // return response.data;
       
-      // API entegrasyonu için mock veri dönüş
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Mock veri dönüşü
+      await new Promise(resolve => setTimeout(resolve, 500)); // Gerçekçi bir yükleme süresi
       
       return {
         id,
@@ -101,14 +103,18 @@ export const updateCriterion = createAsyncThunk(
 // Kriter silme işlemi için async thunk
 export const deleteCriterion = createAsyncThunk(
   'criteria/deleteCriterion',
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
+      const { auth } = getState();
+      
       // Gerçek API çağrısı - şu an mock kullanıyoruz
-      // await axios.delete(`${API_URL}/criteria/${id}/`);
+      // const response = await axios.delete(`${API_URL}/criteria/${id}/`, {
+      //   headers: { Authorization: `Bearer ${auth.token}` }
+      // });
       // return id;
       
-      // API entegrasyonu için mock veri dönüş
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Mock veri dönüşü
+      await new Promise(resolve => setTimeout(resolve, 500)); // Gerçekçi bir yükleme süresi
       
       return id;
     } catch (error) {
@@ -119,32 +125,36 @@ export const deleteCriterion = createAsyncThunk(
   }
 );
 
-// Kriterlerin toplam ağırlığını hesaplama yardımcı fonksiyonu
-const calculateTotalWeight = (criteria) => {
-  return criteria.reduce((total, criterion) => total + criterion.weight, 0);
+// Initial state
+const initialState = {
+  criteria: [],
+  selectedCriterion: null,
+  loading: false,
+  error: null,
+  success: false
 };
 
-// Criteria slice oluşturma
+// Slice
 const criteriaSlice = createSlice({
   name: 'criteria',
-  initialState: {
-    criteria: [],
-    loading: false,
-    error: null,
-    success: null,
-    totalWeight: 0
-  },
+  initialState,
   reducers: {
-    clearErrors: (state) => {
+    clearError: (state) => {
       state.error = null;
     },
     clearSuccess: (state) => {
-      state.success = null;
+      state.success = false;
+    },
+    selectCriterion: (state, action) => {
+      state.selectedCriterion = action.payload;
+    },
+    clearSelectedCriterion: (state) => {
+      state.selectedCriterion = null;
     }
   },
   extraReducers: (builder) => {
     builder
-      // fetchCriteria
+      // Fetch Criteria
       .addCase(fetchCriteria.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -152,69 +162,68 @@ const criteriaSlice = createSlice({
       .addCase(fetchCriteria.fulfilled, (state, action) => {
         state.loading = false;
         state.criteria = action.payload;
-        state.totalWeight = calculateTotalWeight(action.payload);
       })
       .addCase(fetchCriteria.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Kriterler alınamadı';
+        state.error = action.payload;
       })
       
-      // addCriterion
+      // Add Criterion
       .addCase(addCriterion.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.success = null;
+        state.success = false;
       })
       .addCase(addCriterion.fulfilled, (state, action) => {
         state.loading = false;
         state.criteria.push(action.payload);
-        state.totalWeight = calculateTotalWeight(state.criteria);
-        state.success = 'Kriter başarıyla eklendi';
+        state.success = true;
       })
       .addCase(addCriterion.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Kriter eklenemedi';
+        state.error = action.payload;
+        state.success = false;
       })
       
-      // updateCriterion
+      // Update Criterion
       .addCase(updateCriterion.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.success = null;
+        state.success = false;
       })
       .addCase(updateCriterion.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.criteria.findIndex(c => c.id === action.payload.id);
+        const index = state.criteria.findIndex(criterion => criterion.id === action.payload.id);
         if (index !== -1) {
-          state.criteria[index] = action.payload;
+          state.criteria[index] = { ...state.criteria[index], ...action.payload };
         }
-        state.totalWeight = calculateTotalWeight(state.criteria);
-        state.success = 'Kriter başarıyla güncellendi';
+        state.success = true;
       })
       .addCase(updateCriterion.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Kriter güncellenemedi';
+        state.error = action.payload;
+        state.success = false;
       })
       
-      // deleteCriterion
+      // Delete Criterion
       .addCase(deleteCriterion.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.success = null;
+        state.success = false;
       })
       .addCase(deleteCriterion.fulfilled, (state, action) => {
         state.loading = false;
-        state.criteria = state.criteria.filter(c => c.id !== action.payload);
-        state.totalWeight = calculateTotalWeight(state.criteria);
-        state.success = 'Kriter başarıyla silindi';
+        state.criteria = state.criteria.filter(criterion => criterion.id !== action.payload);
+        state.success = true;
       })
       .addCase(deleteCriterion.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Kriter silinemedi';
+        state.error = action.payload;
+        state.success = false;
       });
   }
 });
 
-export const { clearErrors, clearSuccess } = criteriaSlice.actions;
+export const { clearError, clearSuccess, selectCriterion, clearSelectedCriterion } = criteriaSlice.actions;
 
 export default criteriaSlice.reducer; 

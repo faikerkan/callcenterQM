@@ -9,7 +9,6 @@ import { Container } from '@mui/material';
 import Navbar from './components/Navbar';
 import LoginForm from './components/LoginForm';
 import Dashboard from './components/Dashboard';
-import CallList from './components/CallList';
 import CallUpload from './components/CallUpload';
 import EvaluationForm from './components/EvaluationForm';
 import EvaluationResults from './components/EvaluationResults';
@@ -96,12 +95,6 @@ function App() {
             <Route path="/" element={
               <ProtectedRoute>
                 <Dashboard />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/calls" element={
-              <ProtectedRoute>
-                <CallList />
               </ProtectedRoute>
             } />
             

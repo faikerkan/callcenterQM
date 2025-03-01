@@ -7,9 +7,9 @@ const API_URL = 'http://localhost:8000/api/v1';
 // Mock veri (gerçek API bağlantısı için daha sonra değiştirilecek)
 let MOCK_QUEUES = [
   {
-    id: 1,
-    name: 'Müşteri Hizmetleri',
-    description: 'Genel müşteri soruları ve destek',
+    id: 7000,
+    name: '7000 GİRİŞ ABONE TANINMADI',
+    description: 'Abone tanınmadığı durumlar için giriş kuyruğu',
     active: true,
     priority: 1,
     sla: 60, // Saniye cinsinden
@@ -18,9 +18,9 @@ let MOCK_QUEUES = [
     updatedAt: '2023-02-20T14:30:00Z'
   },
   {
-    id: 2,
-    name: 'Teknik Destek',
-    description: 'Teknik sorunlar ve ürün desteği',
+    id: 7001,
+    name: '7001 ABONE SÜREÇLERİ',
+    description: 'Abone süreçleri ile ilgili işlemler',
     active: true,
     priority: 2,
     sla: 120, // Saniye cinsinden
@@ -29,9 +29,9 @@ let MOCK_QUEUES = [
     updatedAt: '2023-02-20T14:35:00Z'
   },
   {
-    id: 3,
-    name: 'Satış',
-    description: 'Ürün satışları ve fiyatlandırma soruları',
+    id: 7002,
+    name: '7002 GAZ KESME',
+    description: 'Gaz kesme işlemleri',
     active: true,
     priority: 3,
     sla: 90, // Saniye cinsinden
@@ -40,15 +40,114 @@ let MOCK_QUEUES = [
     updatedAt: '2023-02-20T14:40:00Z'
   },
   {
-    id: 4,
-    name: 'Şikayetler',
-    description: 'Müşteri şikayetleri ve çözümleri',
-    active: false,
+    id: 7003,
+    name: '7003 BORÇ/ÖDEME YERİ SORGU',
+    description: 'Borç ve ödeme yeri sorgulama işlemleri',
+    active: true,
     priority: 4,
     sla: 45, // Saniye cinsinden
     agents: [2],
     createdAt: '2023-01-15T10:15:00Z',
     updatedAt: '2023-02-20T14:45:00Z'
+  },
+  {
+    id: 7004,
+    name: '7004 ENDEKS',
+    description: 'Endeks işlemleri',
+    active: true,
+    priority: 5,
+    sla: 60,
+    agents: [2, 3],
+    createdAt: '2023-01-15T10:20:00Z',
+    updatedAt: '2023-02-20T14:50:00Z'
+  },
+  {
+    id: 7005,
+    name: '7005 İÇ TESİSAT',
+    description: 'İç tesisat işlemleri',
+    active: true,
+    priority: 6,
+    sla: 75,
+    agents: [3, 4],
+    createdAt: '2023-01-15T10:25:00Z',
+    updatedAt: '2023-02-20T14:55:00Z'
+  },
+  {
+    id: 7006,
+    name: '7006 SÖZLEŞME SONLANDIRMA',
+    description: 'Sözleşme sonlandırma işlemleri',
+    active: true,
+    priority: 7,
+    sla: 90,
+    agents: [2],
+    createdAt: '2023-01-15T10:30:00Z',
+    updatedAt: '2023-02-20T15:00:00Z'
+  },
+  {
+    id: 7007,
+    name: '7007 DOĞALGAZ TALEP/ŞİKAYET',
+    description: 'Doğalgaz talep ve şikayet işlemleri',
+    active: true,
+    priority: 8,
+    sla: 60,
+    agents: [2, 3, 4],
+    createdAt: '2023-01-15T10:35:00Z',
+    updatedAt: '2023-02-20T15:05:00Z'
+  },
+  {
+    id: 7008,
+    name: '7008 ABONE MERKEZLERİ',
+    description: 'Abone merkezleri ile ilgili işlemler',
+    active: true,
+    priority: 9,
+    sla: 45,
+    agents: [3],
+    createdAt: '2023-01-15T10:40:00Z',
+    updatedAt: '2023-02-20T15:10:00Z'
+  },
+  {
+    id: 79187,
+    name: '79187 187',
+    description: '187 hattı işlemleri',
+    active: true,
+    priority: 10,
+    sla: 30,
+    agents: [2, 4],
+    createdAt: '2023-01-15T10:45:00Z',
+    updatedAt: '2023-02-20T15:15:00Z'
+  },
+  {
+    id: 7997,
+    name: '7997 449 SANTRAL GELEN',
+    description: '449 santral gelen çağrılar',
+    active: true,
+    priority: 11,
+    sla: 60,
+    agents: [2, 3],
+    createdAt: '2023-01-15T10:50:00Z',
+    updatedAt: '2023-02-20T15:20:00Z'
+  },
+  {
+    id: 7998,
+    name: '7998 477 GELEN KUYRUĞU',
+    description: '477 gelen çağrı kuyruğu',
+    active: true,
+    priority: 12,
+    sla: 60,
+    agents: [3, 4],
+    createdAt: '2023-01-15T10:55:00Z',
+    updatedAt: '2023-02-20T15:25:00Z'
+  },
+  {
+    id: 7926,
+    name: '7926 ESGAZ',
+    description: 'ESGAZ işlemleri',
+    active: true,
+    priority: 13,
+    sla: 90,
+    agents: [2, 3, 4],
+    createdAt: '2023-01-15T11:00:00Z',
+    updatedAt: '2023-02-20T15:30:00Z'
   }
 ];
 

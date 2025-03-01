@@ -36,6 +36,8 @@ import trLocale from 'date-fns/locale/tr';
 import { fetchCriteria } from '../store/criteriaSlice';
 import { createEvaluation } from '../store/evaluationsSlice';
 import { fetchEvaluations } from '../store/evaluationsSlice';
+import { fetchQueues } from '../store/queuesSlice';
+import { fetchUsers } from '../store/usersSlice';
 
 const EvaluationForm = () => {
   const { callId } = useParams();
@@ -45,6 +47,8 @@ const EvaluationForm = () => {
   
   // Redux state
   const { criteria, loading: criteriaLoading } = useSelector(state => state.criteria);
+  const { queues, loading: queuesLoading } = useSelector(state => state.queues);
+  const { users, loading: usersLoading } = useSelector(state => state.users);
   
   // Local state
   const [formData, setFormData] = useState({
@@ -67,7 +71,7 @@ const EvaluationForm = () => {
     rudeBehavior: false,          // Azarlama, kaba ve ukala konuşma, bağırma (Çağrı Puanı 0)
     noContactInfo: false,         // İrtibat numarası almama/ güncellememe (Çağrı Puanı 0)
     lineLeftOpen: false,          // Müşteri kapattı ancak MT hattı açık bıraktı (Çağrı Puanı 0)
-    kvkkViolation: false,         // KVKK Uyum (Çağrı Puanı 0)
+    kvkkViolation: false,         // KVKK Uyum  (Çağrı Puanı 0)
     indifferentBehavior: false,   // İlgisiz ve duyarsız davranış (Çağrı Puanı -%50 Düşer)
     interrupting: false,          // Söz kesme, aynı anda konuşma (Çağrı Puanı -%50 Düşer)
     improperGreeting: false,      // Çağrıyı geç ya da uygunsuz karşılama (gülme, esneme vs) (Çağrı Puanı -%50 Düşer)
@@ -86,26 +90,11 @@ const EvaluationForm = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   
-  // Mock data for agents and queues
-  const agents = [
-    { id: 1, name: 'Ahmet Yılmaz' },
-    { id: 2, name: 'Mehmet Demir' },
-    { id: 3, name: 'Ayşe Kaya' },
-    { id: 4, name: 'Fatma Şahin' },
-    { id: 5, name: 'Ali Öztürk' }
-  ];
-  
-  const queues = [
-    'Bireysel Destek',
-    'Kurumsal Destek',
-    'Teknik Destek',
-    'Satış',
-    'Şikayet'
-  ];
-  
-  // Fetch criteria on component mount
+  // Fetch criteria, queues and users on component mount
   useEffect(() => {
     dispatch(fetchCriteria());
+    dispatch(fetchQueues());
+    dispatch(fetchUsers());
   }, [dispatch]);
   
   // Initialize scores when criteria are loaded
@@ -347,7 +336,7 @@ const EvaluationForm = () => {
     return 'error';
   };
   
-  if (criteriaLoading) {
+  if (criteriaLoading || queuesLoading || usersLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <CircularProgress />
@@ -404,9 +393,9 @@ const EvaluationForm = () => {
                 label="Müşteri Temsilcisi"
                 required
               >
-                {agents.map(agent => (
+                {users && users.filter(user => user.role === 'agent' || user.role === 'expert').map(agent => (
                   <MenuItem key={agent.id} value={agent.id}>
-                    {agent.name}
+                    {agent.firstName} {agent.lastName}
                   </MenuItem>
                 ))}
               </Select>
@@ -426,9 +415,9 @@ const EvaluationForm = () => {
                 label="Çağrı Kuyruğu"
                 required
               >
-                {queues.map(queue => (
-                  <MenuItem key={queue} value={queue}>
-                    {queue}
+                {queues && queues.map(queue => (
+                  <MenuItem key={queue.id} value={queue.id}>
+                    {queue.name}
                   </MenuItem>
                 ))}
               </Select>

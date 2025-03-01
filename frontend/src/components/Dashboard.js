@@ -191,57 +191,7 @@ const Dashboard = () => {
         </Grid>
       </Grid>
 
-      {/* Son Çağrılar Listesi */}
-      <Paper elevation={3} sx={{ p: 0 }}>
-        <Box sx={{ p: 2, bgcolor: theme.palette.primary.main, color: 'white' }}>
-          <Typography variant="h6">Son Çağrılar</Typography>
-        </Box>
-        
-        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-          {stats.recentCalls.length > 0 ? (
-            stats.recentCalls.map((call, index) => (
-              <React.Fragment key={call.id}>
-                <ListItem
-                  alignItems="flex-start"
-                  secondaryAction={
-                    <Chip
-                      icon={getStatusIcon(call.status)}
-                      label={call.status === 'completed' ? 'Tamamlandı' : call.status === 'pending' ? 'Bekliyor' : 'İşlemde'}
-                      sx={{
-                        bgcolor: getStatusColor(call.status),
-                        color: 'white'
-                      }}
-                      size="small"
-                    />
-                  }
-                >
-                  <ListItemText
-                    primary={call.agentName}
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          sx={{ display: 'inline' }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {call.phoneNumber}
-                        </Typography>
-                        {' — '}{formatDate(call.callDate)}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-                {index < stats.recentCalls.length - 1 && <Divider />}
-              </React.Fragment>
-            ))
-          ) : (
-            <ListItem>
-              <ListItemText primary="Henüz çağrı kaydı bulunmamaktadır." />
-            </ListItem>
-          )}
-        </List>
-      </Paper>
+      {/* Son Çağrılar Listesi kaldırıldı */}
     </Container>
   );
 };

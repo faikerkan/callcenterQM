@@ -27,9 +27,7 @@ import {
   InputAdornment,
   Tooltip,
   FormHelperText,
-  Grid,
-  Switch,
-  FormControlLabel
+  Grid
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -295,67 +293,49 @@ const QueueManagement = () => {
           <Table sx={{ minWidth: 650 }} aria-label="kuyruklar tablosu">
             <TableHead>
               <TableRow>
-                <TableCell>Kuyruk Adı</TableCell>
-                <TableCell>Açıklama</TableCell>
-                <TableCell align="center">Öncelik</TableCell>
-                <TableCell align="center">SLA (sn)</TableCell>
-                <TableCell align="center">Temsilciler</TableCell>
-                <TableCell align="center">Durum</TableCell>
-                <TableCell align="right">İşlemler</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem' }}>Kuyruk Kodu ve Açıklaması</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>İşlemler</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={7} align="center">Yükleniyor...</TableCell>
+                  <TableCell align="center" colSpan={2}>Yükleniyor...</TableCell>
                 </TableRow>
               ) : filteredQueues.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} align="center">Kuyruk bulunamadı</TableCell>
+                  <TableCell align="center" colSpan={2}>Kuyruk bulunamadı</TableCell>
                 </TableRow>
               ) : (
                 filteredQueues.map((queue) => (
-                  <TableRow key={queue.id} hover>
-                    <TableCell component="th" scope="row">
+                  <TableRow 
+                    key={queue.id} 
+                    hover 
+                    sx={{ 
+                      '&:nth-of-type(odd)': { backgroundColor: '#f5f5f5' },
+                      cursor: 'pointer',
+                      '&:hover': { backgroundColor: '#e3f2fd' }
+                    }}
+                  >
+                    <TableCell 
+                      component="th" 
+                      scope="row" 
+                      sx={{ 
+                        fontSize: '1rem', 
+                        fontWeight: 'medium',
+                        py: 1.5
+                      }}
+                    >
                       {queue.name}
-                    </TableCell>
-                    <TableCell>{queue.description}</TableCell>
-                    <TableCell align="center">{queue.priority}</TableCell>
-                    <TableCell align="center">{queue.sla}</TableCell>
-                    <TableCell align="center">
-                      {queue.agents && queue.agents.length > 0 ? (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, justifyContent: 'center' }}>
-                          {queue.agents.map(agentId => {
-                            const agent = users.find(user => user.id === agentId);
-                            return agent ? (
-                              <Chip 
-                                key={agentId} 
-                                label={`${agent.firstName} ${agent.lastName}`} 
-                                size="small" 
-                                color="primary" 
-                                variant="outlined" 
-                              />
-                            ) : null;
-                          })}
-                        </Box>
-                      ) : (
-                        <Typography variant="body2" color="text.secondary">
-                          Temsilci atanmamış
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell align="center">
-                      <Chip 
-                        label={queue.active ? "Aktif" : "Pasif"} 
-                        color={queue.active ? "success" : "default"} 
-                        size="small" 
-                      />
                     </TableCell>
                     <TableCell align="right">
                       <Tooltip title="Düzenle">
                         <IconButton 
                           color="primary" 
-                          onClick={() => handleOpenDialog('edit', queue)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenDialog('edit', queue);
+                          }}
                         >
                           <EditIcon />
                         </IconButton>
@@ -363,7 +343,10 @@ const QueueManagement = () => {
                       <Tooltip title="Sil">
                         <IconButton 
                           color="error" 
-                          onClick={() => handleDeleteConfirm(queue)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteConfirm(queue);
+                          }}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -377,20 +360,31 @@ const QueueManagement = () => {
         </TableContainer>
       </Paper>
       
-      {/* Kuyruk Ekleme/Düzenleme Dialog'u */}
-      <Dialog open={open} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+      {/* Başarı mesajı */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          {dialogMode === 'add' ? 'Kuyruk başarıyla eklendi' : dialogMode === 'edit' ? 'Kuyruk başarıyla güncellendi' : 'Kuyruk başarıyla silindi'}
+        </Alert>
+      </Snackbar>
+      
+      {/* Kuyruk ekleme/düzenleme dialog'u */}
+      <Dialog
+        open={open}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>
           {dialogMode === 'add' ? 'Yeni Kuyruk Ekle' : 'Kuyruğu Düzenle'}
         </DialogTitle>
         <DialogContent>
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
-          
           <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 name="name"
                 label="Kuyruk Adı"
@@ -402,28 +396,11 @@ const QueueManagement = () => {
                 required
               />
             </Grid>
-            
-            <Grid item xs={12} sm={6}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formData.active !== false}
-                    onChange={(e) => setFormData(prev => ({ ...prev, active: e.target.checked }))}
-                    name="active"
-                    color="primary"
-                  />
-                }
-                label="Aktif"
-              />
-            </Grid>
-            
             <Grid item xs={12}>
               <TextField
                 name="description"
                 label="Açıklama"
                 fullWidth
-                multiline
-                rows={2}
                 value={formData.description}
                 onChange={handleChange}
                 error={!!formErrors.description}
@@ -431,8 +408,7 @@ const QueueManagement = () => {
                 required
               />
             </Grid>
-            
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6}>
               <TextField
                 name="priority"
                 label="Öncelik (1-10)"
@@ -446,8 +422,7 @@ const QueueManagement = () => {
                 required
               />
             </Grid>
-            
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6}>
               <TextField
                 name="sla"
                 label="SLA (saniye)"
@@ -461,40 +436,42 @@ const QueueManagement = () => {
                 required
               />
             </Grid>
-            
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="agents-label">Temsilciler</InputLabel>
                 <Select
                   labelId="agents-label"
                   multiple
-                  value={formData.agents || []}
+                  value={formData.agents}
                   onChange={handleAgentChange}
                   renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((agentId) => {
-                        const agent = users.find(user => user.id === agentId);
-                        return agent ? (
+                      {selected.map((value) => {
+                        const agent = activeAgents.find(a => a.id === value);
+                        return (
                           <Chip 
-                            key={agentId} 
-                            label={`${agent.firstName} ${agent.lastName}`} 
-                            size="small" 
+                            key={value} 
+                            label={agent ? agent.name : `Temsilci ${value}`} 
                           />
-                        ) : null;
+                        );
                       })}
                     </Box>
                   )}
                 >
                   {activeAgents.map((agent) => (
                     <MenuItem key={agent.id} value={agent.id}>
-                      {`${agent.firstName} ${agent.lastName} (${agent.team})`}
+                      {agent.name}
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Kuyruğa atanacak temsilcileri seçin</FormHelperText>
               </FormControl>
             </Grid>
           </Grid>
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>İptal</Button>
@@ -502,54 +479,28 @@ const QueueManagement = () => {
             onClick={handleSubmit} 
             variant="contained" 
             color="primary"
-            disabled={loading}
           >
-            {loading ? 'Kaydediliyor...' : 'Kaydet'}
+            {dialogMode === 'add' ? 'Ekle' : 'Güncelle'}
           </Button>
         </DialogActions>
       </Dialog>
       
-      {/* Silme Onayı Dialog'u */}
-      <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
+      {/* Silme onayı dialog'u */}
+      <Dialog
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+      >
         <DialogTitle>Kuyruğu Sil</DialogTitle>
         <DialogContent>
           <Typography>
             "{queueToDelete?.name}" kuyruğunu silmek istediğinizden emin misiniz?
-            Bu işlem geri alınamaz.
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteConfirmOpen(false)}>İptal</Button>
-          <Button 
-            onClick={handleDelete} 
-            variant="contained" 
-            color="error"
-            disabled={loading}
-          >
-            {loading ? 'Siliniyor...' : 'Sil'}
-          </Button>
+          <Button onClick={handleDelete} color="error">Sil</Button>
         </DialogActions>
       </Dialog>
-      
-      {/* Bildirim Snackbar'ı */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity="success" 
-          sx={{ width: '100%' }}
-        >
-          {dialogMode === 'add' 
-            ? 'Kuyruk başarıyla eklendi' 
-            : dialogMode === 'edit' 
-              ? 'Kuyruk başarıyla güncellendi' 
-              : 'Kuyruk başarıyla silindi'}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

@@ -8,8 +8,6 @@ import { refreshToken } from './store/authSlice';
 import Navbar from './components/Navbar';
 import LoginForm from './components/LoginForm';
 import Dashboard from './components/Dashboard';
-import CallList from './components/CallList';
-import CallUpload from './components/CallUpload';
 import EvaluationForm from './components/EvaluationForm';
 import EvaluationResults from './components/EvaluationResults';
 import EvaluationList from './components/EvaluationList';
@@ -87,18 +85,6 @@ const App = () => {
           <Route path="/" element={
             <ProtectedRoute>
               <Dashboard />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/calls" element={
-            <ProtectedRoute>
-              <CallList />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/calls/upload" element={
-            <ProtectedRoute>
-              <CallUpload />
             </ProtectedRoute>
           } />
           

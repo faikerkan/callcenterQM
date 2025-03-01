@@ -44,7 +44,7 @@ import {
   createUser, 
   updateUser, 
   deleteUser, 
-  clearErrors, 
+  clearError, 
   clearSuccess 
 } from '../store/usersSlice';
 
@@ -57,11 +57,9 @@ const ROLES = [
 
 // Takımlar için sabit değişkenler
 const TEAMS = [
-  { value: 'Yönetim', label: 'Yönetim' },
-  { value: 'Kalite Kontrol', label: 'Kalite Kontrol' },
   { value: 'Müşteri Hizmetleri', label: 'Müşteri Hizmetleri' },
-  { value: 'Teknik Destek', label: 'Teknik Destek' },
-  { value: 'Satış', label: 'Satış' }
+  { value: '187 Acil', label: '187 Acil' },
+  { value: 'Santral', label: 'Santral' }
 ];
 
 const UserManagement = () => {
@@ -295,7 +293,7 @@ const UserManagement = () => {
       open: false
     });
     
-    dispatch(clearErrors());
+    dispatch(clearError());
     dispatch(clearSuccess());
   };
   

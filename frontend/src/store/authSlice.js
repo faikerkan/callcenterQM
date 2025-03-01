@@ -16,28 +16,6 @@ const MOCK_USERS = [
     employeeId: 'A001',
     team: 'Yönetim',
     token: 'mock-jwt-token-admin-123456'
-  },
-  {
-    id: 2,
-    username: 'expert',
-    password: 'expert123',
-    firstName: 'Ayşe',
-    lastName: 'Uzman',
-    role: 'expert',
-    employeeId: 'E001',
-    team: 'Kalite',
-    token: 'mock-jwt-token-expert-123456'
-  },
-  {
-    id: 3,
-    username: 'agent',
-    password: 'agent123',
-    firstName: 'Mehmet',
-    lastName: 'Temsilci',
-    role: 'agent',
-    employeeId: 'T001',
-    team: 'Satış',
-    token: 'mock-jwt-token-agent-123456'
   }
 ];
 
@@ -131,13 +109,13 @@ export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      // LocalStorage'dan token'ı sil
-      localStorage.removeItem('token');
-      
-      // Gerçek API çağrısı - isteğe bağlı
+      // Gerçek API çağrısı - şu an mock kullanıyoruz
       // await axios.post(`${API_URL}/auth/logout/`);
       
-      return true;
+      // LocalStorage'dan token'ı kaldır
+      localStorage.removeItem('token');
+      
+      return null;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || 'Çıkış yapılırken bir hata oluştu'
@@ -146,19 +124,28 @@ export const logout = createAsyncThunk(
   }
 );
 
-// Auth slice oluşturma
+// Initial state
+const initialState = {
+  user: null,
+  token: localStorage.getItem('token') || null,
+  loading: false,
+  error: null,
+  isAuthenticated: false
+};
+
+// Slice
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    user: null,
-    token: localStorage.getItem('token'),
-    isAuthenticated: !!localStorage.getItem('token'),
-    loading: false,
-    error: null
-  },
+  initialState,
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    setCredentials: (state, action) => {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+      localStorage.setItem('token', action.payload.token);
     }
   },
   extraReducers: (builder) => {
@@ -170,13 +157,14 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isAuthenticated = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Giriş işlemi başarısız';
+        state.error = action.payload;
+        state.isAuthenticated = false;
       })
       
       // Refresh Token
@@ -186,16 +174,16 @@ const authSlice = createSlice({
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isAuthenticated = true;
       })
       .addCase(refreshToken.rejected, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = false;
+        state.error = action.payload;
         state.user = null;
         state.token = null;
-        state.error = action.payload || 'Token yenileme işlemi başarısız';
+        state.isAuthenticated = false;
       })
       
       // Logout
@@ -204,17 +192,17 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.loading = false;
-        state.isAuthenticated = false;
         state.user = null;
         state.token = null;
+        state.isAuthenticated = false;
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Çıkış işlemi başarısız';
+        state.error = action.payload;
       });
   }
 });
 
-export const { clearError } = authSlice.actions;
+export const { clearError, setCredentials } = authSlice.actions;
 
 export default authSlice.reducer;

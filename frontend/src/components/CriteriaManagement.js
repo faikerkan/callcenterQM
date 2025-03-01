@@ -42,10 +42,10 @@ import {
 } from '@mui/icons-material';
 import { 
   fetchCriteria,
-  createCriterion,
+  addCriterion,
   updateCriterion,
   deleteCriterion,
-  clearErrors,
+  clearError,
   clearSuccess
 } from '../store/criteriaSlice';
 
@@ -100,7 +100,7 @@ const CriteriaManagement = () => {
       setSnackbarMessage(error);
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
-      dispatch(clearErrors());
+      dispatch(clearError());
     }
   }, [success, error, dialogMode, dialogOpen, dispatch]);
   
@@ -201,7 +201,7 @@ const CriteriaManagement = () => {
     if (!validateForm()) return;
     
     if (dialogMode === 'add') {
-      await dispatch(createCriterion(formData));
+      await dispatch(addCriterion(formData));
     } else if (dialogMode === 'edit' && selectedCriterion) {
       await dispatch(updateCriterion({
         criterionId: selectedCriterion.id,
